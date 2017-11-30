@@ -1,0 +1,58 @@
+# Lab 4 submission for:
+* Maddie Ross
+* Ravi Shankar
+* Jordan Paoletti
+
+## BTree binary file structure
+
+### BTree meta data
+
+Consists of the following data in order of appearance on file:
+
+* node count : int
+* tree degree : int
+* sequence length : int
+
+Hence the meta data takes up 12 bytes of memory. We created a BTreeFile class to
+handle file writing and reading. This class abstracts the concept of byte offsets.
+Instead it could be thought of as an array indexing from 0. Due to this abstraction,
+the node count can be used to determine the location of the root. Since the root is always
+the last item written to file, its location in the file is nodeCount - 1.
+
+### BTreNode meta data
+
+Consists of the following data in order of appearance on file:
+
+* own location : int
+* number of keys : int
+* is a leaf node : boolean (stored as one byte)
+
+Hence the meta data for a BTreeNode takes up 9 bytes of memory.
+
+### BTreeNode content
+
+Consists of the following data in order of appearance on file:
+
+* key / frequency pairs : long / int
+* parent pointer : int
+* children pointers : int
+* empty space to fill the node to max size for the specified degree
+
+The key / frequency pairs is the DNA sequence and its frequency that are stored in the node.
+The parent pointer is the location in file to the node's parent (-1 if root). The children pointers
+are the location of the nodes children in file (-1 if leaf node). Finally, the file is filled with 0s
+in order to take up the max size a node can have for a specified degree
+
+
+## Cache timing
+
+Test ran on test3.gbk with sequence length 6 and degree 127
+
+  time(ms)|create|search|
+----------|------|------|
+No Cache  | 1490 |  201 |
+Cache(100)|   49 |   46 |
+Cache(500)|   37 |   36 |
+
+Using a cache causes a significant improvement for performance, especially when
+creating the BTree file
