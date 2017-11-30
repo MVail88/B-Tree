@@ -182,8 +182,8 @@ public class GeneBankFile
 				return retVal;
 			}
 
-			retVal = retVal.replaceAll("\\s","");
-			
+			retVal = retVal.replaceAll("\\s", "");
+
 			int startIndex = -1;
 			for (char c : validChars.toCharArray())
 			{
@@ -201,12 +201,12 @@ public class GeneBankFile
 					startIndex = characterIndex;
 				}
 			}
-			
+
 			if (startIndex != -1)
 			{
 				retVal = retVal.substring(startIndex); // remove beginning numbers
 			}
-			
+
 			return retVal;
 		}
 		catch (IOException e)

@@ -6,86 +6,106 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
- * Read in a query file a make sure the String sequences are valid
- * figure out the sequence length
+ * Read in a query file a make sure the String sequences are valid figure out
+ * the sequence length
  *
  * @author ravi
  */
-public class QueryFile implements Iterable<String> {
-    private int sequenceLength;
-    private String fileName;
+public class QueryFile implements Iterable<String>
+{
+	private int sequenceLength;
+	private String fileName;
 
-    /**
-     * Instantiates a new QueryFile ready to be iterated through with a for each loop
-     * @param fileName the name of the file to open
-     * @throws FileNotFoundException if file doesn't exist
-     * @throws IllegalArgumentException if file is improper format
-     */
-    public QueryFile(String fileName) throws FileNotFoundException, IllegalArgumentException{
-        Scanner scanner = new Scanner(new File(fileName));
-        this.fileName = fileName;
+	/**
+	 * Instantiates a new QueryFile ready to be iterated through with a for each
+	 * loop
+	 * 
+	 * @param fileName
+	 *            the name of the file to open
+	 * @throws FileNotFoundException
+	 *             if file doesn't exist
+	 * @throws IllegalArgumentException
+	 *             if file is improper format
+	 */
+	public QueryFile(String fileName) throws FileNotFoundException, IllegalArgumentException
+	{
+		Scanner scanner = new Scanner(new File(fileName));
+		this.fileName = fileName;
 
-        if (scanner.hasNext()) {
-            String first = scanner.nextLine();
-            sequenceLength = first.length();
+		if (scanner.hasNext())
+		{
+			String first = scanner.nextLine();
+			sequenceLength = first.length();
 
-            if (!DNAUtil.isValidDNAString(first, sequenceLength)){
-                scanner.close();
-                throw new IllegalArgumentException("Query file contains invalid DNA sequences");
-            }
+			if (!DNAUtil.isValidDNAString(first, sequenceLength))
+			{
+				scanner.close();
+				throw new IllegalArgumentException("Query file contains invalid DNA sequences");
+			}
 
-        }
+		}
 
-        scanner.close();
-    }
+		scanner.close();
+	}
 
-    /**
-     * @return the length of the sequence
-     */
-    public int getSequenceLength() {
-        return sequenceLength;
-    }
+	/**
+	 * @return the length of the sequence
+	 */
+	public int getSequenceLength()
+	{
+		return sequenceLength;
+	}
 
-    @Override
-    public Iterator<String> iterator() {
-        return new QueryFileIterator();
-    }
+	@Override
+	public Iterator<String> iterator()
+	{
+		return new QueryFileIterator();
+	}
 
-    private class QueryFileIterator implements Iterator<String> {
-        //fields
-        private Scanner scan;
+	private class QueryFileIterator implements Iterator<String>
+	{
+		// fields
+		private Scanner scan;
 
-        //constructor
-        public QueryFileIterator() {
-            try {
-                scan = new Scanner(new File(fileName));
-            } catch (FileNotFoundException e) {
-                System.err.println("Unable to find query file: " + fileName);
-            }
-        }
+		// constructor
+		public QueryFileIterator()
+		{
+			try
+			{
+				scan = new Scanner(new File(fileName));
+			}
+			catch (FileNotFoundException e)
+			{
+				System.err.println("Unable to find query file: " + fileName);
+			}
+		}
 
-        @Override
-        public boolean hasNext() {
-            if (scan == null)
-                return false;
+		@Override
+		public boolean hasNext()
+		{
+			if (scan == null)
+				return false;
 
-            if (!scan.hasNextLine()) {
-                scan.close();
-                scan = null;
-                return false;
-            }
+			if (!scan.hasNextLine())
+			{
+				scan.close();
+				scan = null;
+				return false;
+			}
 
-            return true;
-        }
+			return true;
+		}
 
-        @Override
-        public String next() {
-            if (hasNext()) {
-                return scan.nextLine();
-            }
-            else
-                throw new NoSuchElementException();
-        }
+		@Override
+		public String next()
+		{
+			if (hasNext())
+			{
+				return scan.nextLine();
+			}
+			else
+				throw new NoSuchElementException();
+		}
 
-    }
+	}
 }
