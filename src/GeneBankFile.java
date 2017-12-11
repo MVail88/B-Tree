@@ -9,6 +9,7 @@ import java.io.PushbackReader;
  * gene sequence(moving window).
  *
  * The code in this class could definitely be improved
+ * @author Martin Vail
  */
 public class GeneBankFile
 {
