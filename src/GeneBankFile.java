@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PushbackReader;
 
 /**
  * This class parses a Gene Bank File(gbk) file. Find and return the next valid
@@ -12,13 +13,12 @@ import java.io.IOException;
 public class GeneBankFile
 {
 	// fields
-	private BufferedReader file;
+	private PushbackReader file;
 	private int sequenceLength;
 	private boolean inSequence;
 	private StringBuffer sb;
 	private Window window;
-
-	private static final String validChars = "ACGT";
+	private boolean NFound;
 
 	// constructors
 
@@ -42,8 +42,10 @@ public class GeneBankFile
 		this.sequenceLength = sequenceLength;
 		inSequence = false;
 		window = new Window(sequenceLength);
+		
+		NFound = false;
 
-		file = new BufferedReader(new FileReader(fileName));
+		file = new PushbackReader(new BufferedReader(new FileReader(fileName)));
 	}
 
 	// public methods
@@ -66,13 +68,25 @@ public class GeneBankFile
 		try
 		{
 			boolean foundStart = false;
+			char charToAdd = (char) file.read();
 			String line = "";
 
-			while (line != null && !foundStart)
+			while (charToAdd != (char) -1 && !foundStart)
 			{
-				line = file.readLine(); // readLine() returns null if the end of the stream is reached
 				if (line != null && line.contains("ORIGIN"))
+				{
 					foundStart = true;
+				}
+				else if (NFound && (charToAdd == 'a' || charToAdd == 'c' || charToAdd == 'g' || charToAdd == 't' || charToAdd == 'A' || charToAdd == 'C' || charToAdd == 'G' || charToAdd == 'T'))
+				{
+					file.unread(charToAdd);
+					foundStart = true;
+				}
+				else
+				{
+					line = line + charToAdd; // readLine() returns null if the end of the stream is reached
+					charToAdd = (char) file.read();
+				}
 			}
 
 			inSequence = foundStart;
@@ -175,37 +189,32 @@ public class GeneBankFile
 	{
 		try
 		{
-			String retVal = file.readLine();
+			char charToAdd = (char) file.read();
+			String retVal = "";
+			boolean foundEnd = false;
 
-			if ("//".equals(retVal))
+			while (retVal != null && !foundEnd)
 			{
-				return retVal;
-			}
-
-			retVal = retVal.replaceAll("\\s", "");
-
-			int startIndex = -1;
-			for (char c : validChars.toCharArray())
-			{
-				int characterIndex = -1;
-				if (retVal.indexOf(c) != -1)
+				if (retVal != null &&  (charToAdd == 'n' || charToAdd == 'N'))
 				{
-					characterIndex = retVal.indexOf(c);
+					foundEnd = true;
+					NFound = true;
+				}
+				else if (retVal.length() > 0 && (retVal.charAt(retVal.length() - 1) == '/' && charToAdd == '/'))
+				{
+					foundEnd = true;
+					NFound = false;
+					retVal = retVal.substring(0, retVal.length() - 1);
 				}
 				else
 				{
-					characterIndex = retVal.indexOf(Character.toLowerCase(c));
-				}
-				if (startIndex == -1 || (characterIndex > -1 && characterIndex < startIndex))
-				{
-					startIndex = characterIndex;
+					retVal = retVal + charToAdd;
+					charToAdd = (char) file.read();
 				}
 			}
 
-			if (startIndex != -1)
-			{
-				retVal = retVal.substring(startIndex); // remove beginning numbers
-			}
+			retVal = retVal.replaceAll("\\s+", "");
+			retVal = retVal.replaceAll("\\d+", "");
 
 			return retVal;
 		}
@@ -226,19 +235,7 @@ public class GeneBankFile
 	{
 		StringBuffer buff = new StringBuffer(500);
 
-		boolean full = false;
-		while (!full)
-		{
-			String line = nextDNALine();
-			if ("//".equals(line))
-			{
-				full = true;
-			}
-			else
-			{
-				buff.append(line);
-			}
-		}
+		buff.append(nextDNALine());
 
 		return buff;
 	}

@@ -210,6 +210,10 @@ public class BTreeFile
 		BTreeFile retVal = new BTreeFile(treeMetaDataLength, nodeDataLength, 0);
 
 		File f = new File(fileName);
+		if (fileName.contains("/"))
+		{
+			f.getParentFile().mkdirs();
+		}
 		if (f.exists())
 		{
 			if (!f.delete())
