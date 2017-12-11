@@ -2,7 +2,7 @@
  * A node for use with a generic double linked list implementation of a data
  * structure.
  * 
- * @author Jordan Paoletti
+ * @author Madeline Ross
  */
 public class DLLNode<E>
 {
