@@ -4,7 +4,7 @@
  * location The equals method is overridden to compare the location of two cache
  * objects
  * 
- * @author ravi
+ * @author Madeline Ross
  */
 public class CacheObject
 {
