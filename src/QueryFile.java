@@ -9,7 +9,8 @@ import java.util.Scanner;
  * Read in a query file a make sure the String sequences are valid figure out
  * the sequence length
  *
- * @author ravi
+ * @author Madeline Ross
+ * @author Martin Vail
  */
 public class QueryFile implements Iterable<String>
 {
