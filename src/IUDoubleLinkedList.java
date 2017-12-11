@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
  * java.util package. This List checks for element equality by address, not
  * value
  * 
- * @author Jordan Paoletti
+ * @author Madeline Ross
  */
 public class IUDoubleLinkedList<T> implements IndexedUnsortedList<T>
 {
