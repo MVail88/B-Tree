@@ -8,7 +8,7 @@ import java.io.PrintWriter;
  * and searches for instances of each line in the query file and prints out the
  * results
  * 
- * @author ravi
+ * @author Martin Vail
  */
 public class GeneBankSearch
 {
