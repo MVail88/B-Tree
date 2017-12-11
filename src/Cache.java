@@ -6,7 +6,7 @@ import java.util.ListIterator;
  * Objects are always added to the front of the cache. when an object is
  * retrieved from a cache, that object is move to the front of the cache.
  * 
- * @author Jordan Paoletti
+ * @author Madeline Ross
  */
 public class Cache<T>
 {
